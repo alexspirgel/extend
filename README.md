@@ -4,7 +4,9 @@ Extends a value with another value using vanilla JavaScript. Similar in function
 Notes:
 
 * This function always performs a deep copy, there is no shallow copy option. Native solutions now exist for shallow copying.
-* `undefined` values will not be merged into the target.
+* Arrays are not merged, they are replaced without referencing the original.
+* Non-plain objects are passed by reference.
+* `undefined` values are not merged into the target.
 
 ## Installation
 
@@ -36,6 +38,57 @@ extend(object1, object2, objects3);
 
 ### Clone an object
 ```js
-var object2 = extend({}, object1);
+let object2 = extend({}, object1);
 ```
 `object2` will be a clone of `object1`.
+
+## Example
+
+```js
+const value1 = {
+	a: 1,
+	b: 2,
+	c: {
+		a: 1,
+		b: 2
+	},
+	e: [
+		true,
+		'false'
+	]
+};
+
+const value2 = {
+	b: '2',
+	body: document.body, // passed by reference
+	c: {
+		b: 200,
+		c: 3
+	},
+	d: 4,
+	e: [
+		false
+	]
+};
+
+const result = extend(value1, value2);
+
+console.log(result);
+/* 
+Output:
+{
+	a: 1,
+	b: '2',
+	body: document.body,
+	c: {
+		a: 1,
+		b: 200,
+		c: 3
+	}
+	d: 4,
+	e: [
+		false
+	]
+}
+*/
+```
